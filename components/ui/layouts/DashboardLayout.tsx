@@ -2,10 +2,10 @@
 
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { UserMenu } from "./UserMenu";
 import { Plus, Users, Upload, Home } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserMenu } from "@/components/ui/layouts/UserMenu";
+import Link from "next/link";
 
 interface DashboardLayoutProps {
   children: ReactNode;
