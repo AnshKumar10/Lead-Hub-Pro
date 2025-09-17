@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, Filter, X, Download } from "lucide-react";
-import { BuyerFilter } from "@/app/lib/validations/buyer";
+import { BuyerFilter } from "@/lib/validations/buyer";
 
 interface BuyerFiltersProps {
   filters: Partial<BuyerFilter>;

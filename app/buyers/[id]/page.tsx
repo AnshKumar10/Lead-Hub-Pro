@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { BuyerForm as BuyerFormType } from "@/app/lib/validations/buyer";
+import { BuyerForm as BuyerFormType } from "@/lib/validations/buyer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Edit, Phone, Mail, MapPin, Calendar } from "lucide-react";
+import { ArrowLeft, Phone, Mail, MapPin, Calendar } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useBuyers } from "@/app/hooks/useBuyer";
+import { useBuyers } from "@/hooks/useBuyer";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Link from "next/link";
 import { toast } from "sonner";
 import BuyerForm from "@/components/ui/BuyerForm";
-import { formatBudget, getStatusColor } from "@/app/lib/utils";
+import { formatBudget, getStatusColor } from "@/lib/utils";
 
 export default function BuyerDetail() {
   const { id } = useParams();

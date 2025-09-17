@@ -1,7 +1,7 @@
 "use client";
 
-import { useBuyers } from "@/app/hooks/useBuyer";
-import { BuyerForm as BuyerFormType } from "@/app/lib/validations/buyer";
+import { useBuyers } from "@/hooks/useBuyer";
+import { BuyerForm as BuyerFormType } from "@/lib/validations/buyer";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import BuyerForm from "@/components/ui/BuyerForm";
@@ -15,9 +15,27 @@ export default function BuyerEdit() {
   const { id } = useParams<{ id: string }>();
 
   const { getBuyer, updateBuyer } = useBuyers();
-  const [buyer, setBuyer] = useState<any>(null);
+  const [buyer, setBuyer] = useState<BuyerFormType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingBuyer, setIsLoadingBuyer] = useState(true);
+
+  // Transform database buyer data to form data format
+  const transformToFormData = (dbBuyer: any): BuyerFormType => ({
+    fullName: dbBuyer.full_name || "",
+    email: dbBuyer.email || "",
+    phone: dbBuyer.phone || "",
+    city: dbBuyer.city || "Chandigarh",
+    propertyType: dbBuyer.property_type || "apartment",
+    bhk: dbBuyer.bhk || "",
+    purpose: dbBuyer.purpose || "end-use",
+    budgetMin: dbBuyer.budget_min || undefined,
+    budgetMax: dbBuyer.budget_max || undefined,
+    timeline: dbBuyer.timeline || "3-6 months",
+    source: dbBuyer.source || "website",
+    status: dbBuyer.status || "new",
+    notes: dbBuyer.notes || "",
+    tags: dbBuyer.tags || [],
+  });
 
   useEffect(() => {
     let isMounted = true;
@@ -28,8 +46,8 @@ export default function BuyerEdit() {
       try {
         setIsLoadingBuyer(true);
         const buyerData = await getBuyer(id);
-        if (isMounted) {
-          setBuyer(buyerData);
+        if (isMounted && buyerData) {
+          setBuyer(transformToFormData(buyerData));
         }
       } catch (error) {
         console.error("Error fetching buyer:", error);
@@ -53,14 +71,13 @@ export default function BuyerEdit() {
 
     setIsLoading(true);
     try {
-      // Map form fields to database fields
       const buyerData = {
         full_name: data.fullName,
         email: data.email || null,
         phone: data.phone,
         city: data.city,
         property_type: data.propertyType,
-        bhk: data.bhk ? Number(data.bhk) : null,
+        bhk: data.bhk || null,
         purpose: data.purpose,
         budget_min: data.budgetMin || null,
         budget_max: data.budgetMax || null,
@@ -73,7 +90,6 @@ export default function BuyerEdit() {
 
       await updateBuyer(id, buyerData);
       toast.success(`Lead for ${data.fullName} has been updated successfully.`);
-
       redirect("/buyers");
     } catch (error) {
       console.error("Error updating buyer:", error);
@@ -131,26 +147,6 @@ export default function BuyerEdit() {
     );
   }
 
-  // Map database fields to form fields
-  const defaultValues = {
-    fullName: buyer.full_name,
-    email: buyer.email || "",
-    phone: buyer.phone,
-    city: buyer.city,
-    propertyType: buyer.property_type,
-    bhk: buyer.bhk
-      ? (buyer.bhk.toString() as "1" | "2" | "3" | "4" | "5")
-      : undefined,
-    purpose: buyer.purpose,
-    budgetMin: buyer.budget_min || undefined,
-    budgetMax: buyer.budget_max || undefined,
-    timeline: buyer.timeline,
-    source: buyer.source,
-    notes: buyer.notes || "",
-    tags: buyer.tags || [],
-    status: buyer.status,
-  };
-
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -164,14 +160,14 @@ export default function BuyerEdit() {
           <div>
             <h1 className="text-3xl font-bold">Edit Lead</h1>
             <p className="text-muted-foreground mt-2">
-              Update lead information for {buyer.full_name}
+              Update the lead information below
             </p>
           </div>
         </div>
 
         <div className="max-w-4xl">
           <BuyerForm
-            defaultValues={defaultValues}
+            defaultValues={buyer}
             onSubmit={handleSubmit}
             submitText="Update Lead"
             isLoading={isLoading}

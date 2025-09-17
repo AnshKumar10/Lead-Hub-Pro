@@ -1,4 +1,4 @@
-import type { Database } from "@/app/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {

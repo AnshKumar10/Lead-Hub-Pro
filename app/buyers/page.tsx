@@ -13,11 +13,11 @@ import {
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload } from "lucide-react";
-import { useDebounce } from "@/app/hooks/useDebounce";
-import { useBuyers } from "../hooks/useBuyer";
-import { BuyerFilter } from "../lib/validations/buyer";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useBuyers } from "@/hooks/useBuyer";
+import { BuyerFilter } from "@/lib/validations/buyer";
 import Link from "next/link";
-import { usePagination } from "../hooks/usePagination";
+import { usePagination } from "@/hooks/usePagination";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import BuyerTable from "@/components/BuyerTable";
 import BuyerFilters from "@/components/BuyerFilter";
@@ -27,7 +27,7 @@ export default function BuyerList() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { buyers, fetchBuyers } = useBuyers();
+  const { buyers } = useBuyers();
 
   // URL-synced filters
   const [filters, setFilters] = useState<Partial<BuyerFilter>>(() => ({

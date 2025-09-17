@@ -1,13 +1,32 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/app/integrations/supabase/client";
-import { useAuth } from "@/app/contexts/AuthContext";
-import { BuyerFilter } from "@/app/lib/validations/buyer";
-import { Database } from "@/app/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { BuyerFilter } from "@/lib/validations/buyer";
 import { toast } from "sonner";
 
-type Buyer = Database["public"]["Tables"]["buyers"]["Row"];
-type BuyerInsert = Database["public"]["Tables"]["buyers"]["Insert"];
-type BuyerUpdate = Database["public"]["Tables"]["buyers"]["Update"];
+type Buyer = {
+  id: string;
+  full_name: string;
+  email: string | null;
+  phone: string;
+  city: string;
+  property_type: string;
+  bhk: number | null;
+  purpose: string;
+  budget_min: number | null;
+  budget_max: number | null;
+  timeline: string;
+  source: string;
+  notes: string | null;
+  tags: string[];
+  status: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type BuyerInsert = Omit<Buyer, "id" | "user_id" | "created_at" | "updated_at">;
+type BuyerUpdate = Partial<BuyerInsert>;
 
 export function useBuyers() {
   const [buyers, setBuyers] = useState<Buyer[]>([]);
@@ -54,7 +73,7 @@ export function useBuyers() {
 
       if (error) throw error;
 
-      setBuyers(data || []);
+      setBuyers(data);
       setError(null);
     } catch (err) {
       console.error("Error fetching buyers:", err);
@@ -66,12 +85,7 @@ export function useBuyers() {
   };
 
   const createBuyer = useCallback(
-    async (
-      buyerData: Omit<
-        BuyerInsert,
-        "id" | "user_id" | "created_at" | "updated_at"
-      >
-    ) => {
+    async (buyerData: BuyerInsert) => {
       if (!user) {
         const error = new Error("User not authenticated");
         console.error(error);

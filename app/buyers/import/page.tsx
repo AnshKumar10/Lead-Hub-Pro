@@ -17,7 +17,7 @@ import {
 import { toast } from "sonner";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Link from "next/link";
-import { useCSVImport } from "@/app/hooks/useCSVImport";
+import { useCSVImport } from "@/hooks/useCSVImport";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function BuyerImport() {

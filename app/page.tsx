@@ -11,7 +11,7 @@ import {
   Plus,
   FileSpreadsheet,
 } from "lucide-react";
-import { useBuyers } from "./hooks/useBuyer";
+import { useBuyers } from "@/hooks/useBuyer";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Link from "next/link";
 

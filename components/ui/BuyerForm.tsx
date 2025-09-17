@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   BuyerForm as BuyerFormType,
   BuyerFormSchema,
-} from "@/app/lib/validations/buyer";
+} from "@/lib/validations/buyer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
