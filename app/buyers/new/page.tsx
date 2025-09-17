@@ -20,15 +20,15 @@ export default function BuyerNew() {
     try {
       // Map form fields to database fields
       const buyerData = {
-        full_name: data.fullName,
+        full_name: data.fullName, // Map fullName to full_name
         email: data.email || null,
         phone: data.phone,
         city: data.city,
-        property_type: data.propertyType,
+        property_type: data.propertyType, // Map propertyType to property_type
         bhk: data.bhk ? Number(data.bhk) : null,
         purpose: data.purpose,
-        budget_min: data.budgetMin || null,
-        budget_max: data.budgetMax || null,
+        budget_min: data.budgetMin || null, // Map budgetMin to budget_min
+        budget_max: data.budgetMax || null, // Map budgetMax to budget_max
         timeline: data.timeline,
         source: data.source,
         notes: data.notes || null,
@@ -36,15 +36,25 @@ export default function BuyerNew() {
         status: data.status || "new",
       };
 
-      await createBuyer(buyerData);
+      const { error } = await createBuyer(buyerData);
+
+      if (error) {
+        throw new Error(error);
+      }
 
       toast.success(
         `New lead for ${data.fullName} has been created successfully.`
       );
 
-      redirect("/buyers");
-    } catch {
-      toast.error("Failed to create lead. Please try again.");
+      // Use window.location to ensure a full page reload and clear any stale state
+      window.location.href = "/buyers";
+    } catch (error) {
+      console.error("Error creating lead:", error);
+      toast.error(
+        error instanceof Error
+          ? `Failed to create lead: ${error.message}`
+          : "Failed to create lead. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }

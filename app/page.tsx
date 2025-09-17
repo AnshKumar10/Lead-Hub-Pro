@@ -15,8 +15,18 @@ import { useBuyers } from "./hooks/useBuyer";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import Link from "next/link";
 
+// Define a type for the status parameter
+type BuyerStatus =
+  | "new"
+  | "contacted"
+  | "qualified"
+  | "viewing"
+  | "negotiating"
+  | "closed"
+  | "lost";
+
 const getStatusColor = (status: string) => {
-  const colors = {
+  const colors: Record<BuyerStatus, string> = {
     new: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
     contacted:
       "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
@@ -30,7 +40,8 @@ const getStatusColor = (status: string) => {
       "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300",
     lost: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
   };
-  return colors[status as keyof typeof colors] || colors.new;
+
+  return colors[status as BuyerStatus] || colors.new;
 };
 
 const Index = () => {

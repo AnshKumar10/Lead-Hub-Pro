@@ -1,6 +1,7 @@
 "use client";
 
 import { useBuyers } from "@/app/hooks/useBuyer";
+import { BuyerForm as BuyerFormType } from "@/app/lib/validations/buyer";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import BuyerForm from "@/components/ui/BuyerForm";
@@ -19,21 +20,33 @@ export default function BuyerEdit() {
   const [isLoadingBuyer, setIsLoadingBuyer] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchBuyer = async () => {
       if (!id) return;
 
       try {
+        setIsLoadingBuyer(true);
         const buyerData = await getBuyer(id);
-        setBuyer(buyerData);
+        if (isMounted) {
+          setBuyer(buyerData);
+        }
       } catch (error) {
-        toast.error("Failed to load buyer details.");
+        console.error("Error fetching buyer:", error);
+        toast.error("Failed to load buyer details. Please try again later.");
       } finally {
-        setIsLoadingBuyer(false);
+        if (isMounted) {
+          setIsLoadingBuyer(false);
+        }
       }
     };
 
     fetchBuyer();
-  }, [id, getBuyer, toast]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id, getBuyer]);
 
   const handleSubmit = async (data: BuyerFormType) => {
     if (!id) return;
@@ -59,12 +72,16 @@ export default function BuyerEdit() {
       };
 
       await updateBuyer(id, buyerData);
-
       toast.success(`Lead for ${data.fullName} has been updated successfully.`);
 
       redirect("/buyers");
-    } catch {
-      toast.error("Failed to update lead. Please try again.");
+    } catch (error) {
+      console.error("Error updating buyer:", error);
+      toast.error(
+        error instanceof Error
+          ? `Failed to update lead: ${error.message}`
+          : "Failed to update lead. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
