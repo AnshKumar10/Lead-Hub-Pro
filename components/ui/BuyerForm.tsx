@@ -1,9 +1,5 @@
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  BuyerForm as BuyerFormType,
-  BuyerFormSchema,
-} from "@/lib/validations/buyer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +15,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { BuyerFormSchema } from "@/lib/validations/buyer";
+import { BuyerForm as BuyerFormType } from "@/lib/validations/buyer";
 
 interface BuyerFormProps {
   defaultValues?: Partial<BuyerFormType>;
@@ -44,9 +42,20 @@ export default function BuyerForm({
   } = useForm<BuyerFormType>({
     resolver: zodResolver(BuyerFormSchema),
     defaultValues: {
-      tags: [],
-      status: "new",
-      ...defaultValues,
+      fullName: defaultValues?.fullName || "",
+      email: defaultValues?.email || "",
+      phone: defaultValues?.phone || "",
+      city: defaultValues?.city || "Chandigarh",
+      propertyType: defaultValues?.propertyType || "apartment",
+      bhk: defaultValues?.bhk,
+      purpose: defaultValues?.purpose || "end-use",
+      budgetMin: defaultValues?.budgetMin,
+      budgetMax: defaultValues?.budgetMax,
+      timeline: defaultValues?.timeline || "3-6 months",
+      source: defaultValues?.source || "website",
+      status: defaultValues?.status || "new",
+      notes: defaultValues?.notes || "",
+      tags: defaultValues?.tags || [],
     },
   });
 
@@ -181,7 +190,8 @@ export default function BuyerForm({
                   </span>
                 </Label>
                 <Select
-                  onValueChange={(value) => setValue("city", value as any)}
+                  value={watch("city")}
+                  onValueChange={(value) => setValue("city", value)}
                 >
                   <SelectTrigger
                     aria-describedby={errors.city ? "city-error" : undefined}
@@ -223,6 +233,7 @@ export default function BuyerForm({
                   </span>
                 </Label>
                 <Select
+                  value={watch("propertyType")}
                   onValueChange={(value) =>
                     setValue("propertyType", value as any)
                   }
@@ -263,7 +274,8 @@ export default function BuyerForm({
                     </span>
                   </Label>
                   <Select
-                    onValueChange={(value) => setValue("bhk", value as any)}
+                    value={watch("bhk")}
+                    onValueChange={(value) => setValue("bhk", value)}
                   >
                     <SelectTrigger
                       aria-describedby={errors.bhk ? "bhk-error" : undefined}
@@ -298,7 +310,10 @@ export default function BuyerForm({
                   </span>
                 </Label>
                 <Select
-                  onValueChange={(value) => setValue("purpose", value as any)}
+                  value={watch("purpose")}
+                  onValueChange={(value) =>
+                    setValue("purpose", value as "investment" | "end-use")
+                  }
                 >
                   <SelectTrigger
                     aria-describedby={
@@ -397,7 +412,17 @@ export default function BuyerForm({
                   </span>
                 </Label>
                 <Select
-                  onValueChange={(value) => setValue("timeline", value as any)}
+                  value={watch("timeline")}
+                  onValueChange={(value) =>
+                    setValue(
+                      "timeline",
+                      value as
+                        | "immediate"
+                        | "1-3 months"
+                        | "3-6 months"
+                        | "6+ months"
+                    )
+                  }
                 >
                   <SelectTrigger
                     aria-describedby={
@@ -432,7 +457,20 @@ export default function BuyerForm({
                   </span>
                 </Label>
                 <Select
-                  onValueChange={(value) => setValue("source", value as any)}
+                  value={watch("source")}
+                  onValueChange={(value) =>
+                    setValue(
+                      "source",
+                      value as
+                        | "website"
+                        | "referral"
+                        | "social media"
+                        | "advertisement"
+                        | "walk-in"
+                        | "phone"
+                        | "other"
+                    )
+                  }
                 >
                   <SelectTrigger
                     aria-describedby={
@@ -473,8 +511,20 @@ export default function BuyerForm({
                   Status
                 </Label>
                 <Select
-                  onValueChange={(value) => setValue("status", value as any)}
-                  defaultValue={defaultValues.status}
+                  value={watch("status")}
+                  onValueChange={(value) =>
+                    setValue(
+                      "status",
+                      value as
+                        | "new"
+                        | "contacted"
+                        | "qualified"
+                        | "viewing"
+                        | "negotiating"
+                        | "closed"
+                        | "lost"
+                    )
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select status" />
