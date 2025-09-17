@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 import {
@@ -22,7 +22,7 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import BuyerTable from "@/components/BuyerTable";
 import BuyerFilters from "@/components/BuyerFilter";
 
-export default function BuyerList() {
+function BuyerListContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -299,5 +299,13 @@ export default function BuyerList() {
         </section>
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function BuyersPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-muted-foreground">Loading buyers...</div>}>
+      <BuyerListContent />
+    </Suspense>
   );
 }
